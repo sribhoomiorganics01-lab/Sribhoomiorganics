@@ -252,7 +252,7 @@ exports.createProduct = async (req, res) => {
       featured,
       bestSeller,
       organic,
-      image: req.file ? `/uploads/${req.file.filename}` : ''
+      image: req.file ? req.file.path : ''
     });
 
     await product.save();
@@ -281,7 +281,7 @@ exports.updateProduct = async (req, res) => {
 
     // 🔥 IMAGE FIX
     if (req.file) {
-      product.image = `/uploads/${req.file.filename}`;
+       image: req.file ? req.file.path : ''
     }
 
     await product.save();
