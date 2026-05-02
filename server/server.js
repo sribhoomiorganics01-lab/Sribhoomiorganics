@@ -28,18 +28,23 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sribhoomi
 app.use(cors({
   origin: '*'
 }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 const fs = require('fs');
 const path = require('path');
 
-// 🔥 define uploads path
+// ✅ define FIRST
 const uploadsPath = path.join(__dirname, 'uploads');
 
-// 🔥 ensure folder exists
+// ✅ then use it
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath);
 }
 
-// 🔥 serve static
+// ✅ serve
 app.use('/uploads', express.static(uploadsPath));
 app.use(morgan('dev'));
 
