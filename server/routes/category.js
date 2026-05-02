@@ -58,14 +58,29 @@ router.get('/:slug', async (req, res) => {
 // CREATE CATEGORY
 router.post('/', protect, admin, upload.single('image'), async (req, res) => {
   try {
-    const category = await Category.create({
+    // 🔥 check duplicate
+    const existing = await Category.findOne({ name: req.body.name });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category already exists'
+      });
+    }
+
+    const category = new Category({
       name: req.body.name,
-      description: req.body.description,
-      image: req.file ? `/uploads/${req.file.filename}` : undefined
+      description: req.body.description || '',
+      image: req.file
+        ? `/uploads/${req.file.filename}`
+        : undefined
     });
 
+    await category.save();
+
     res.json({ success: true, category });
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -73,23 +88,36 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
 // UPDATE CATEGORY
 router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
   try {
-    const updateData = {
-      name: req.body.name,
-      description: req.body.description
-    };
+    const category = await Category.findById(req.params.id);
 
-    if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+    if (!category) {
+      return res.status(404).json({ success: false, message: 'Category not found' });
     }
 
-    const category = await Category.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    );
+    // 🔥 FIX duplicate issue
+    if (req.body.name && req.body.name !== category.name) {
+      const existing = await Category.findOne({ name: req.body.name });
+      if (existing) {
+        return res.status(400).json({
+          success: false,
+          message: 'Category name already exists'
+        });
+      }
+    }
+
+    category.name = req.body.name || category.name;
+    category.description = req.body.description || category.description;
+
+    if (req.file) {
+      category.image = `/uploads/${req.file.filename}`;
+    }
+
+    await category.save(); // 🔥 important (triggers slug)
 
     res.json({ success: true, category });
+
   } catch (error) {
+    console.error(error); // 🔥 VERY IMPORTANT
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -99,7 +127,16 @@ router.delete('/:id', protect, admin, async (req, res) => {
   try {
     const categoryId = req.params.id;
 
-    // 🔥 CHECK IF PRODUCTS EXIST
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Category not found'
+      });
+    }
+
+    // 🔥 check products
     const productExists = await Product.exists({ category: categoryId });
 
     if (productExists) {
@@ -109,7 +146,7 @@ router.delete('/:id', protect, admin, async (req, res) => {
       });
     }
 
-    await Category.findByIdAndDelete(categoryId);
+    await category.deleteOne();
 
     res.json({
       success: true,
@@ -117,6 +154,7 @@ router.delete('/:id', protect, admin, async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message
