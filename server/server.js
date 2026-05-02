@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 const fs = require('fs');
 
 // 🔥 Ensure uploads folder exists
-const uploadsPath = path.join(__dirname, 'uploads');
+const path = require('path');
 
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath);
