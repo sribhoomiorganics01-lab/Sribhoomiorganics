@@ -28,18 +28,19 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sribhoomi
 app.use(cors({
   origin: '*'
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 const fs = require('fs');
-
-// 🔥 Ensure uploads folder exists
 const path = require('path');
 
+// 🔥 define uploads path
+const uploadsPath = path.join(__dirname, 'uploads');
+
+// 🔥 ensure folder exists
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath);
 }
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 🔥 serve static
+app.use('/uploads', express.static(uploadsPath));
 app.use(morgan('dev'));
 
 app.use('/api/auth', authRoutes);
