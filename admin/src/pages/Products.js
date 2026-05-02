@@ -165,21 +165,23 @@ if (editingProduct) {
     data,
     {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
       }
     }
   );
   toast.success('Product updated successfully');
 } else {
          await axios.post(
-  `${API_URL}/products`,
-  data,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    }
-  }
-);
+           `${API_URL}/products`,
+            data,
+           {
+            headers: {
+             Authorization: `Bearer ${token}`,
+             'Content-Type': 'multipart/form-data'
+           }
+          }
+       );
          toast.success('Product created successfully');
         }
 
@@ -457,6 +459,7 @@ await axios.delete(`${API_URL}/products/${id}`, {
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
+                    console.log(e.target.files[0]); // DEBUG
                     setImage(e.target.files[0]); // ✅ clean
                   }}
                  className="w-full px-4 py-3 border border-gray-300 rounded-xl"
