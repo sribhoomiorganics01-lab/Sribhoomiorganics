@@ -71,56 +71,82 @@ const Categories = () => {
     });
   };
 
+  // 🔥 ADD THIS BLOCK HERE
+const uploadToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "mern_upload");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dajkgy9is/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+  console.log("CATEGORY CLOUDINARY:", data);
+
+  if (!data.secure_url) {
+    throw new Error(data.error?.message || "Upload failed");
+  }
+
+  return data.secure_url;
+};
+
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('adminToken');
+  e.preventDefault();
 
-     if (editingCategory) {
-  const data = new FormData();
-  data.append('name', formData.name);
-  data.append('description', formData.description || '');
+  try {
+    const token = localStorage.getItem('adminToken');
 
-  if (formData.image) {
-    data.append('image', formData.image);
-  }
+    let imageUrl = editingCategory?.image || "";
 
-  // FIXED
-await axios.put(
-  `${API_URL}/categories/${editingCategory._id}`,
-  data,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
+    // 🔥 upload image first
+    if (formData.image) {
+      imageUrl = await uploadToCloudinary(formData.image);
     }
-  }
-);
 
-  toast.success('Category updated successfully');
-} else {
-       const data = new FormData();
-data.append('name', formData.name);
-data.append('description', formData.description || '');
+    const payload = {
+      name: formData.name,
+      description: formData.description,
+      image: imageUrl,
+    };
 
-if (formData.image) {
-  data.append('image', formData.image);
-}
-
-// FIXED
-await axios.post(`${API_URL}/categories`, data, {
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-});
-        toast.success('Category created successfully');
-      }
-      await fetchCategories();
-      handleCloseModal();
-      
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Operation failed');
+    if (editingCategory) {
+      await axios.put(
+        `${API_URL}/categories/${editingCategory._id}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      toast.success('Category updated successfully');
+    } else {
+      await axios.post(
+        `${API_URL}/categories`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      toast.success('Category created successfully');
     }
-  };
+
+    await fetchCategories();
+    handleCloseModal();
+
+  } catch (error) {
+    console.error(error);
+    toast.error(error.response?.data?.message || 'Operation failed');
+  }
+};
 
   const handleDelete = async (id) => {
     try {
@@ -175,7 +201,7 @@ await axios.post(`${API_URL}/categories`, data, {
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-4">
                <img
-                  src={`${API_URL.replace('/api', '')}${category.image}`}
+                  src={category.image}
                   alt={category.name}
                   className="w-16 h-16 object-contain"
                 />
