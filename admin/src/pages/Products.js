@@ -156,6 +156,7 @@ const response = await axios.get(
 
      // 🔥 important
      if (image) {
+        console.log("APPENDING IMAGE:", image);
         data.append('image',image);
       }
 if (editingProduct) {
@@ -165,8 +166,7 @@ if (editingProduct) {
   data,
   {
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data"
+      Authorization: `Bearer ${token}`
     }
   }
 );
@@ -177,8 +177,8 @@ if (editingProduct) {
   data,
   {
     headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data"
+      Authorization: `Bearer ${token}`
+      
     }
   }
 );
@@ -463,9 +463,10 @@ await axios.delete(`${API_URL}/products/${id}`, {
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    console.log(e.target.files[0]); // DEBUG
-                    setImage(e.target.files[0]); // ✅ clean
-                  }}
+                          const file = e.target.files[0];
+                          console.log("SELECTED FILE:", file); // debug
+                          setImage(file);
+                        }}
                  className="w-full px-4 py-3 border border-gray-300 rounded-xl"
                 />
               </div>
