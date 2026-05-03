@@ -302,19 +302,25 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    let variants = req.body.variants;
+
+    if (typeof variants === "string") {
+      variants = JSON.parse(variants);
+    }
+
     product.name = req.body.name;
     product.description = req.body.description;
     product.category = req.body.category;
-    product.variants = JSON.parse(req.body.variants);
+    product.variants = variants;
     product.featured = req.body.featured;
     product.bestSeller = req.body.bestSeller;
     product.organic = req.body.organic;
 
-    // 🔥 IMAGE FIX
-    if (req.file) {
-     product.image = req.file.path;
+    // 🔥 new image handling
+    if (req.body.image) {
+      product.image = req.body.image;
     }
-    console.log("FILE:", req.file);
+
     await product.save();
 
     res.json({ success: true, product });
