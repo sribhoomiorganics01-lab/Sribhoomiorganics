@@ -31,6 +31,7 @@ const Categories = () => {
     });
 
     setCategories( response.data?.categories || response.data?.data?.categories || response.data?.data || []);
+    console.log("FETCHED CATEGORIES:", response.data);
   } catch (error) {
     toast.error('Failed to fetch categories');
   } finally {
