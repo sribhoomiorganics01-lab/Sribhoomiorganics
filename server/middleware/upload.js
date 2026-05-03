@@ -12,9 +12,12 @@ cloudinary.config({
 // 🔥 Storage setup
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'sribhoomi_products', // folder name in cloudinary
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+  params: async (req, file) => {
+    return {
+      folder: 'sribhoomi_products',
+      resource_type: 'auto', // 🔥 VERY IMPORTANT
+      public_id: Date.now() + '-' + file.originalname,
+    };
   },
 });
 
