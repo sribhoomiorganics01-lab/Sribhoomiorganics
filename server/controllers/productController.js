@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+const streamifier = require("streamifier");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -245,33 +246,35 @@ exports.createProduct = async (req, res) => {
 
     // 🔥 if image exists → upload to cloudinary
     if (req.file) {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "sribhoomi_products" },
-        async (error, result) => {
-          if (error) {
-            console.error("Cloudinary Error:", error);
-            return res.status(500).json({
-              success: false,
-              message: error.message,
-            });
-          }
+      const result = await new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream(
+    {
+      folder: "sribhoomi_products",
+      resource_type: "auto",
+    },
+    (error, result) => {
+      if (error) {
+        console.error("Cloudinary Error:", error);
+        return reject(error);
+      }
+      resolve(result);
+    }
+  );
 
-          imageUrl = result.secure_url;
+  streamifier.createReadStream(req.file.buffer).pipe(stream);
+});
 
-          const product = await Product.create({
-            ...req.body,
-            image: imageUrl,
-          });
+imageUrl = result.secure_url;
 
-          return res.status(201).json({
-            success: true,
-            product,
-          });
-        }
-      );
+const product = await Product.create({
+  ...req.body,
+  image: imageUrl,
+});
 
-      uploadStream.end(req.file.buffer);
-      return;
+return res.status(201).json({
+  success: true,
+  product,
+});
     }
 
     // 🔥 no image case
