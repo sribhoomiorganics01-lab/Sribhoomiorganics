@@ -138,32 +138,59 @@ const response = await axios.get(
    setVariants(updated);
   };
 
+  // 🔥 ADD THIS HERE
+const uploadToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "mern_upload");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/daijkgy9is/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+  console.log("CLOUDINARY:", data);
+
+  if (!data.secure_url) {
+    throw new Error("Upload failed");
+  }
+
+  return data.secure_url;
+};
+
   const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
      const token = localStorage.getItem('adminToken');
 
-     const data = new FormData();
+     let imageUrl = editingProduct?.image || "";
 
-     data.append('name', formData.name);
-     data.append('description', formData.description);
-     data.append('variants', JSON.stringify(variants));
-     data.append('category', formData.category);
-     data.append('featured', formData.featured);
-     data.append('bestSeller', formData.bestSeller);
-     data.append('organic', formData.organic);
+// 🔥 upload first
+if (image) {
+  imageUrl = await uploadToCloudinary(image);
+}
 
-     // 🔥 important
-     if (image) {
-        console.log("APPENDING IMAGE:", image);
-        data.append('image',image);
-      }
+const payload = {
+  name: formData.name,
+  description: formData.description,
+  variants,
+  category: formData.category,
+  featured: formData.featured,
+  bestSeller: formData.bestSeller,
+  organic: formData.organic,
+  image: imageUrl,
+};
+
 if (editingProduct) {
 
  await axios.put(
   `${API_URL}/products/${editingProduct._id}`,
-  data,
+  payload,
   {
     headers: {
       Authorization: `Bearer ${token}`
@@ -174,7 +201,7 @@ if (editingProduct) {
 } else {
          await axios.post(
   `${API_URL}/products`,
-  data,
+  payload,
   {
     headers: {
       Authorization: `Bearer ${token}`
@@ -253,11 +280,7 @@ await axios.delete(`${API_URL}/products/${id}`, {
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-4">
                       <img
-                        src={
-                            product.image?.startsWith("http")
-                            ? product.image
-                            : `${BASE_URL.replace('/api', '')}/uploads/${product.image}`
-                          }
+                        src={product.image}
                         alt={product.name}
                         onError={(e) => (e.target.src = '/placeholder.png')}
                         className="w-14 h-14 object-cover rounded-xl"
