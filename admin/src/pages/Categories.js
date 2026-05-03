@@ -201,7 +201,7 @@ const uploadToCloudinary = async (file) => {
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-4">
                <img
-                  src={category.image}
+                  src={category.image || "/no-image.png"}
                   alt={category.name}
                   className="w-16 h-16 object-contain"
                 />
