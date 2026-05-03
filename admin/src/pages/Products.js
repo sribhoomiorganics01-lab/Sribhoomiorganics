@@ -160,26 +160,28 @@ const response = await axios.get(
       }
 if (editingProduct) {
 
-  await axios.put(
-    `${API_URL}/products/${editingProduct._id}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+ await axios.put(
+  `${API_URL}/products/${editingProduct._id}`,
+  data,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data"
     }
-  );
+  }
+);
   toast.success('Product updated successfully');
 } else {
          await axios.post(
-           `${API_URL}/products`,
-            data,
-           {
-            headers: {
-             Authorization: `Bearer ${token}`
-           }
-          }
-       );
+  `${API_URL}/products`,
+  data,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data"
+    }
+  }
+);
          toast.success('Product created successfully');
         }
 

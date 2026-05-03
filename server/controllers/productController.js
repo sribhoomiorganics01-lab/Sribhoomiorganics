@@ -283,7 +283,7 @@ exports.updateProduct = async (req, res) => {
     if (req.file) {
      product.image = req.file.path;
     }
-
+    console.log("FILE:", req.file);
     await product.save();
 
     res.json({ success: true, product });
