@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+const cloudinary = require("cloudinary").v2;
 
 exports.getProducts = async (req, res) => {
   try {
@@ -234,35 +235,56 @@ exports.addReview = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      category,
-      variants,
-      featured,
-      bestSeller,
-      organic
-    } = req.body;
+    let imageUrl = null;
 
-    const product = new Product({
-      name,
-      description,
-      category,
-      variants: JSON.parse(variants),
-      featured,
-      bestSeller,
-      organic,
-      image: req.file ? req.file.path : null
+    // 🔥 if image exists → upload to cloudinary
+    if (req.file) {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "sribhoomi_products" },
+        async (error, result) => {
+          if (error) {
+            console.error("Cloudinary Error:", error);
+            return res.status(500).json({
+              success: false,
+              message: error.message,
+            });
+          }
+
+          imageUrl = result.secure_url;
+
+          const product = await Product.create({
+            ...req.body,
+            image: imageUrl,
+          });
+
+          return res.status(201).json({
+            success: true,
+            product,
+          });
+        }
+      );
+
+      uploadStream.end(req.file.buffer);
+      return;
+    }
+
+    // 🔥 no image case
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      product,
     });
 
-    await product.save();
-
-    res.status(201).json({ success: true, product });
-
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
