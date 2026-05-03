@@ -251,7 +251,11 @@ await axios.delete(`${API_URL}/products/${id}`, {
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-4">
                       <img
-                        src={`${BASE_URL.replace('/api', '')}/uploads/${product.image}`}
+                        src={
+                            product.image?.startsWith("http")
+                            ? product.image
+                            : `${BASE_URL.replace('/api', '')}/uploads/${product.image}`
+                          }
                         alt={product.name}
                         onError={(e) => (e.target.src = '/placeholder.png')}
                         className="w-14 h-14 object-cover rounded-xl"
