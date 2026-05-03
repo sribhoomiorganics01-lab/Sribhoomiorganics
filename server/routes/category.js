@@ -60,9 +60,7 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
     const category = new Category({
       name: req.body.name,
       description: req.body.description || '',
-      image: req.file
-        ? `/uploads/${req.file.filename}`
-        : undefined
+      image: req.body.image
     });
 
     await category.save();
@@ -98,8 +96,8 @@ router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
     category.name = req.body.name || category.name;
     category.description = req.body.description || category.description;
 
-    if (req.file) {
-      category.image = `/uploads/${req.file.filename}`;
+    if (req.body.image) {
+      category.image = req.body.image;
     }
 
     await category.save(); // 🔥 important (triggers slug)
