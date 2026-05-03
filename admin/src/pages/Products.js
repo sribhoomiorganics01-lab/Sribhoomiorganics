@@ -141,11 +141,12 @@ const response = await axios.get(
   // 🔥 ADD THIS HERE
 const uploadToCloudinary = async (file) => {
   const formData = new FormData();
+
   formData.append("file", file);
   formData.append("upload_preset", "mern_upload");
 
   const res = await fetch(
-    "https://api.cloudinary.com/v1_1/daijkgy9is/image/upload",
+    "https://api.cloudinary.com/v1_1/dajkgy9is/image/upload",
     {
       method: "POST",
       body: formData,
@@ -156,10 +157,11 @@ const uploadToCloudinary = async (file) => {
   console.log("CLOUDINARY:", data);
 
   if (!data.secure_url) {
-    throw new Error("Upload failed");
-  }
+  console.error("Cloudinary error:", data);
+  throw new Error(data.error?.message || "Upload failed");
+}
 
-  return data.secure_url;
+return data.secure_url;
 };
 
   const handleSubmit = async (e) => {
