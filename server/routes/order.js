@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createOrder, verifyPayment, deleteOrder, getMyOrders, getOrderById, cancelOrder } = require('../controllers/orderController');
+const { createOrder, verifyPayment, deleteOrder, getMyOrders, getOrderById, cancelOrder,failOrder } = require('../controllers/orderController');
 const { protect } = require('../middleware/auth');
 
 router.post('/', protect, createOrder);
