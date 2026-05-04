@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Category = require('../models/Category');
 const Settings = require('../models/settings');
 
+
 // 🔍 GLOBAL SEARCH
 exports.globalSearch = async (req, res) => {
   try {
@@ -363,8 +364,8 @@ exports.updateSettings = async (req, res) => {
       settings.marqueeText = req.body.marqueeText;
     }
 
-    if (req.file) {
-      settings.promoImage = `/uploads/${req.file.filename}`;
+    if (req.body.image) {
+     settings.promoImage = req.body.image;
     }
 
     await settings.save();

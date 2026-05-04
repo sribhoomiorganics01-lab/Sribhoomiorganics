@@ -7,24 +7,65 @@ const Settings = () => {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
 
-  const handleSubmit = async () => {
-    try {
-      const token = localStorage.getItem('adminToken');
+  const uploadToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "mern_upload");
 
-      const data = new FormData();
-      data.append('marqueeText', text);
-      if (image) data.append('image', image);
-
-      await axios.put(`${API_URL}/admin/settings`, data, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      toast.success('Updated successfully');
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || 'Update failed'); 
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dajkgy9is/image/upload",
+    {
+      method: "POST",
+      body: formData,
     }
-  };
+  );
+
+  const data = await res.json();
+  return data.secure_url;
+};
+
+  const handleSubmit = async () => {
+  try {
+    const token = localStorage.getItem('adminToken');
+
+    let imageUrl = "";
+
+    // 🔥 Upload to Cloudinary first
+    if (image) {
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", "mern_upload");
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dajkgy9is/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      imageUrl = data.secure_url;
+    }
+
+    // 🔥 Send only URL to backend
+    await axios.put(`${API_URL}/admin/settings`, {
+      marqueeText: text,
+      image: imageUrl
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    toast.success('Updated successfully');
+
+    // optional quick refresh
+    setTimeout(() => window.location.reload(), 1000);
+
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || 'Update failed');
+  }
+};
 
   return (
     <div className="p-6">
