@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Shield, Truck, Leaf, Heart, Star, ChevronRight, Menu } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { API_URL,BASE_URL } from '../../config';
+import { API_URL} from '../../config';
 import ProductCard from '../../components/client/ProductCard';
 import { getImageUrl } from '../../utils/getImageUrl';
 
@@ -131,7 +131,7 @@ const Home = () => {
                className="hidden lg:flex justify-center"
               >
                <img
-                  src={`${BASE_URL}${promoImage}`}
+                  src={getImageUrl(promoImage)}
                   alt="Promo"
                   className="w-[720px] h-[480px] object-cover rounded-2xl shadow-2xl hover:scale-105 transition"
                 />
