@@ -291,7 +291,7 @@ const Home = () => {
                {/* IMAGE */}
                {category.image ? (
                   <img
-                     src={`${BASE_URL}${category.image}`}
+                     src={getImageUrl(category.image)}
                     alt={category.name}
                     className="w-16 h-16 object-contain mb-3"
                   />
