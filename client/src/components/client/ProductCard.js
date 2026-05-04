@@ -5,7 +5,7 @@ import { ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import toast from 'react-hot-toast';
 import { getImageUrl } from '../../utils/getImageUrl';
-import { API_URL, BASE_URL } from '../../config';
+import { API_URL } from '../../config';
 
 
 const ProductCard = ({ product }) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { API_URL,BASE_URL } from '../config';
+import { API_URL } from '../config';
 import { Plus, Edit2, Trash2, X, Image, Star, Tag } from 'lucide-react';
 
 const Products = () => {

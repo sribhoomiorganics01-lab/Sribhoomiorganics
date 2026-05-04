@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Star, ShoppingCart, Minus, Plus, Check, Truck, Shield, RotateCcw, Heart, Home } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { API_URL, BASE_URL } from '../../config';
+import { API_URL } from '../../config';
 import { useCart } from '../../context/CartContext';
 import toast from 'react-hot-toast';
 import ProductCard from '../../components/client/ProductCard';
