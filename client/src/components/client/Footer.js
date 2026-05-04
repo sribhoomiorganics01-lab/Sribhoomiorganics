@@ -23,7 +23,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
              <a
-               href="httpshttps://www.instagram.com/sribhoomiorganics?igsh=MWsybjFoM3E3d2VwNQ=="
+               href="https://www.instagram.com/sribhoomiorganics?igsh=MWsybjFoM3E3d2VwNQ=="
                target="_blank"
                rel="noopener noreferrer"
                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
