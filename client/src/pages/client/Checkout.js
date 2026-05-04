@@ -64,6 +64,9 @@ const Checkout = () => {
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
+      if (window.Razorpay) {
+        return resolve(true); 
+      }
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.onload = () => resolve(true);
@@ -94,7 +97,8 @@ const Checkout = () => {
           address: formData.address,
           city: formData.city,
           state: formData.state,
-          pincode: formData.pincode
+          pincode: formData.pincode,
+          status: 'initiated' 
         },
         paymentMethod: 'razorpay'
       };
@@ -114,7 +118,7 @@ const Checkout = () => {
       }
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY,
+        key: RAZORPAY_KEY,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
         name: 'Sri Bhoomi Organics',
@@ -152,8 +156,8 @@ const Checkout = () => {
         modal: {
          ondismiss: async () => {
            try {
-             await axios.delete(`/orders/${order._id}`);
-             console.log("Order deleted (payment cancelled)");
+             await axios.put(`/orders/${order._id}/fail`);
+             console.log("Order marked as failed (cancelled)");
             } catch (err) {
                console.error(err);
               }
@@ -165,8 +169,8 @@ const Checkout = () => {
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', async (response) => {
       try {
-       await axios.delete(`/orders/${order._id}`);
-       console.log("Order deleted (payment failed)");
+       await axios.put(`/orders/${order._id}/fail`);
+       console.log("Order marked as failed");
       }catch (err) {
        console.error(err);
       }

@@ -284,7 +284,9 @@ const Dashboard = () => {
                     </a>
                   </div>
                 ) : (
-                  orders.map((order) => (
+                  orders
+                     .filter(order => order.orderStatus !== 'failed')
+                     .map((order) => (
                     <div
                       key={order._id}
                       className="bg-white rounded-2xl shadow-sm p-6"

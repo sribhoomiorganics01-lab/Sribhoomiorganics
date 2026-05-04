@@ -328,3 +328,21 @@ exports.cancelOrder = async (req, res) => {
     });
   }
 };
+
+exports.failOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ success: false });
+    }
+
+    order.orderStatus = 'failed'; // 🔥 KEY FIX
+    await order.save();
+
+    res.json({ success: true });
+
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+};
