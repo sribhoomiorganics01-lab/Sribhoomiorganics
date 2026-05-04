@@ -22,31 +22,24 @@ const Footer = () => {
               is carefully sourced from certified organic farms.
             </p>
             <div className="flex space-x-4">
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
+             <a
+               href="httpshttps://www.instagram.com/sribhoomiorganics?igsh=MWsybjFoM3E3d2VwNQ=="
+               target="_blank"
+               rel="noopener noreferrer"
+               className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
               >
-                <Facebook className="w-5 h-5" />
-              </a>
+               <Instagram className="w-5 h-5" />
+             </a>
+
               <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
+               href="https://youtube.com/@sribhoomiorganics?si=vBZ99nXkMbSLLsaW"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
               >
-                <Twitter className="w-5 h-5" />
+               <Youtube className="w-5 h-5" />
               </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-            </div>
+           </div>
           </div>
 
           {/* Quick Links */}
@@ -100,9 +93,9 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
                 <span className="text-gray-400">
-                  123 Organic Lane
+                  Ganesh Avenue 8th Street,Sakthi Nagar
                   <br />
-                  Farm City, India 123456
+                  Porur, Chennai 600116
                 </span>
               </li>
               <li className="flex items-center space-x-3">
@@ -111,7 +104,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-400">hello@sribhoomi.com</span>
+                <span className="text-gray-400">sribhoomiorganics01@gmail.com</span>
               </li>
             </ul>
           </div>

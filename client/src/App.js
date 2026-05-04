@@ -14,12 +14,14 @@ import PrivateRoute from './components/client/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
 import ForgotPassword from './pages/client/Auth/ForgotPassword';
 import ResetPassword from './pages/client/Auth/ResetPassword';
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow">
+        <ScrollToTop />   
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
