@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
+import toast from 'react-hot-toast';
 
 const Settings = () => {
   const [text, setText] = useState('');
@@ -13,14 +15,14 @@ const Settings = () => {
       data.append('marqueeText', text);
       if (image) data.append('image', image);
 
-      await axios.put('http://localhost:5000/api/admin/settings', data, {
+      await axios.put(`${API_URL}/admin/settings`, data, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      alert('Updated successfully');
+      toast.success('Updated successfully');
     } catch (err) {
       console.error(err);
-      alert('Update failed');
+      toast.error(err.response?.data?.message || 'Update failed'); 
     }
   };
 
