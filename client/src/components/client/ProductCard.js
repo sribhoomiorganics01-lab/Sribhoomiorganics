@@ -42,11 +42,11 @@ const handleAddToCart = () => {
       <Link to={`/products/${product.slug}`} className="block">
         <div className="card-elevated overflow-hidden group flex flex-col">
           {/* Image Container */}
-          <div className="relative h-40 sm:h-52  overflow-hidden bg-earth-100">
+          <div className="relative h-40 sm:h-52 overflow-hidden bg-white flex items-center justify-center">
             <img
                  src={getImageUrl(product.image)}
                 alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105 p-2"
               loading="lazy"
                onError={(e) => {
                   e.target.src = '/fallback.png';

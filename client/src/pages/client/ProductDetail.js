@@ -133,7 +133,7 @@ const handleAddToCart = () => {
           <span className="text-gray-900 font-medium truncate">{product.name}</span>
         </nav>
 
-        <div className="bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div className="aspect-square flex items-center justify-center bg-white rounded-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
             {/* Product Image */}
             <div className="relative">
@@ -145,7 +145,7 @@ const handleAddToCart = () => {
                 <img
                   src={getImageUrl(product.image)}
                   alt={product.name}
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="max-h-full max-w-full object-contain p-4"
                 />
               </motion.div>
 
