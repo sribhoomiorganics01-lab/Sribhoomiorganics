@@ -18,10 +18,23 @@ exports.createOrder = async (req, res) => {
       });
     }
 
-    const itemsPrice = orderItems.reduce(
-     (acc, item) => acc + (item.variant?.price || 0) * item.quantity,
-      0
-    );
+    const itemsPrice = orderItems.reduce((acc, item) => {
+  const price = item.variant?.price || item.price || 0;
+
+  if (!price || !item.quantity) {
+    console.log("INVALID ITEM:", item);
+  }
+
+  return acc + price * item.quantity;
+}, 0);
+
+if (!itemsPrice || isNaN(itemsPrice)) {
+  console.log("INVALID TOTAL:", orderItems);
+  return res.status(400).json({
+    success: false,
+    message: "Invalid order data"
+  });
+}
     const shippingPrice = itemsPrice > 500 ? 0 : 50;
     const taxPrice = 0;
     const totalPrice = itemsPrice + shippingPrice + taxPrice;
@@ -50,8 +63,6 @@ if (paymentMethod === 'cod') {
     const variant = product.variants.find(
       v => v.quantity === item.variant?.quantity
     );
-
-    console.log("COD MATCH:", item.variant?.quantity, variant);
 
     if (!variant) {
        console.log("VARIANT NOT FOUND:", item);

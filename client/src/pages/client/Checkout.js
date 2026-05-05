@@ -77,7 +77,7 @@ const Checkout = () => {
 
   const handleRazorpayPayment = async () => {
     if (!validateForm()) {
-     setLoading(false);
+     setLoading(true);
      return;
     }
     try {
@@ -87,7 +87,10 @@ const Checkout = () => {
         price: item.salePrice || item.price,
         quantity: item.quantity,
         image: item.image,
-        variant:item.variant
+        variant: {
+             quantity: item.variant?.quantity,
+              price: item.variant?.price || item.salePrice || item.price
+            }
       }));
 
       const orderData = {
