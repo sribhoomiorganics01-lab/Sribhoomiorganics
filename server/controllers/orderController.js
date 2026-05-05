@@ -42,7 +42,10 @@ if (paymentMethod === 'cod') {
   for (const item of order.orderItems) {
     const product = await Product.findById(item.product);
 
-    if (!product) continue;
+    if (!product || !product.variants){
+     console.log("PRODUCT ERROR:", item);
+     continue;
+    } 
 
     const variant = product.variants.find(
       v => v.quantity === item.variant?.quantity

@@ -77,12 +77,12 @@ const Checkout = () => {
 
   const handleRazorpayPayment = async () => {
     if (!validateForm()) {
-     setLoading(true);
+     setLoading(false);
      return;
     }
     try {
       const orderItems = cart.map((item) => ({
-        product: item.productId,
+        product: item.productId || item._id,
         name: item.name,
         price: item.salePrice || item.price,
         quantity: item.quantity,
@@ -204,7 +204,7 @@ const Checkout = () => {
 
     try {
       const orderItems = cart.map((item) => ({
-        product: item.productId,
+        product: item.productId || item._id,
         name: item.name,
         price: item.salePrice || item.price,
         quantity: item.quantity,
