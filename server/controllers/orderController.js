@@ -50,7 +50,10 @@ if (paymentMethod === 'cod') {
 
     console.log("COD MATCH:", item.variant?.quantity, variant);
 
-    if (variant) {
+    if (!variant) {
+       console.log("VARIANT NOT FOUND:", item);
+       continue; // prevent crash
+     }
       if (variant.stock < item.quantity) {
         return res.status(400).json({
           message: `Not enough stock for ${product.name}`
@@ -58,7 +61,7 @@ if (paymentMethod === 'cod') {
       }
 
       variant.stock -= item.quantity;
-    }
+    
 
     await product.save();
   }

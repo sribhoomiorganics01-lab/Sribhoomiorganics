@@ -9,6 +9,6 @@ router.get('/my-orders', protect, getMyOrders);
 router.get('/:id', protect, getOrderById);
 router.put('/:id/cancel', protect, cancelOrder);
 router.delete('/:id', protect, deleteOrder);
-router.put('/orders/:id/fail', failOrder);
+router.put('/:id/fail', failOrder);
 
 module.exports = router;

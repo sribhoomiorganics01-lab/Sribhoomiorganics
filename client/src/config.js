@@ -1,4 +1,4 @@
 const API_URL = 'https://sribhoomiorganics.onrender.com/api';
-const RAZORPAY_KEY = process.env.REACT_APP_RAZORPAY_KEY || 'rzp_testXXXXXXXXXX';
+const RAZORPAY_KEY = 'rzp_test_Sfze3fOtjO62Pr';
 
 export { API_URL, RAZORPAY_KEY };

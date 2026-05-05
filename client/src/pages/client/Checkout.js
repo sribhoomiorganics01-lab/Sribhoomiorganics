@@ -76,8 +76,10 @@ const Checkout = () => {
   };
 
   const handleRazorpayPayment = async () => {
-    setLoading(true);
-
+    if (!validateForm()) {
+     setLoading(true);
+     return;
+    }
     try {
       const orderItems = cart.map((item) => ({
         product: item.productId,
@@ -107,6 +109,12 @@ const Checkout = () => {
         `/orders`,
         orderData
       );
+
+      if (!orderResponse.data?.razorpayOrder) {
+        toast.error("Payment initialization failed");
+        setLoading(false);
+        return;
+      }  
 
       const { razorpayOrder, order } = orderResponse.data;
 
@@ -140,7 +148,7 @@ const Checkout = () => {
         },
         handler: async (response) => {
           try {
-            await await axios.post(`/orders/verify`, {
+              await axios.post(`/orders/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature
@@ -165,6 +173,11 @@ const Checkout = () => {
           }
         }
       };
+      if (!window.Razorpay) {
+        toast.error("Razorpay not loaded");
+        setLoading(false);
+        return;
+      }
 
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', async (response) => {
